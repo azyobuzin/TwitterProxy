@@ -1,4 +1,5 @@
-﻿using MsgPack.Serialization;
+﻿using System;
+using MsgPack.Serialization;
 
 namespace TwitterProxy.WebServer.Models
 {
@@ -12,5 +13,8 @@ namespace TwitterProxy.WebServer.Models
 
         [MessagePackMember(2)]
         public ulong UserId { get; set; }
+
+        [MessagePackMember(3)]
+        public DateTime CreatedAtUtc { get; set; }
     }
 }

@@ -17,8 +17,10 @@ namespace TwitterProxy.WebServer
 
         private static void ConfigureTwitterApi(IAppBuilder app)
         {
+            const string baseUri = "https://api.twitter.com";
             app.Match<AccessTokenMiddleware>("/oauth/access_token")
-                .Use<ProxyMiddleware>("https://api.twitter.com");
+                .Match<RedirectMiddleware>(new[] { "/oauth/authenticate", "/oauth/authorize" }, baseUri)
+                .Use<ProxyMiddleware>(baseUri);
         }
     }
 }

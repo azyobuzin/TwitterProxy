@@ -78,6 +78,7 @@
     <Compile Include="WebServer\Extensions.cs" />
     <Compile Include="WebServer\Middlewares\AccessTokenMiddleware.cs" />
     <Compile Include="WebServer\Middlewares\ProxyMiddleware.cs" />
+    <Compile Include="WebServer\Middlewares\RedirectMiddleware.cs" />
     <Compile Include="WebServer\Models\AccessToken.cs" />
     <Compile Include="WebServer\Models\Consumer.cs" />
     <Compile Include="WebServer\ProxyUtils.cs" />

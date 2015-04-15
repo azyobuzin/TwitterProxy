@@ -12,9 +12,14 @@ namespace TwitterProxy.WebServer
 {
     static class Extensions
     {
-        public static IAppBuilder Match<T>(this IAppBuilder app, string path)
+        public static IAppBuilder Match<T>(this IAppBuilder app, string path, params object[] args)
         {
-            return app.MapWhen(ctx => ctx.Request.Path.Value == path, a => a.Use<T>());
+            return app.MapWhen(ctx => ctx.Request.Path.Value.Equals(path, StringComparison.OrdinalIgnoreCase), a => a.Use<T>(args));
+        }
+
+        public static IAppBuilder Match<T>(this IAppBuilder app, IEnumerable<string> paths, params object[] args)
+        {
+            return app.MapWhen(ctx => paths.Contains(ctx.Request.Path.Value, StringComparer.OrdinalIgnoreCase), a => a.Use<T>(args));
         }
 
         public static bool IsGet(this IOwinRequest request)

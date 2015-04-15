@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.Owin;
 using Microsoft.Owin.Helpers;
@@ -31,7 +32,8 @@ namespace TwitterProxy.WebServer.Middlewares
                             {
                                 ConsumerKey = oauthDic["oauth_consumer_key"],
                                 AccessTokenSecret = resDic["oauth_token_secret"],
-                                UserId = userId
+                                UserId = userId,
+                                CreatedAtUtc = DateTime.UtcNow
                             });
                             tran.Insert("screenNames", userId, screenName);
                             tran.Commit();
