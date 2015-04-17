@@ -1,6 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 using System.Threading;
+using Azyobuzi.OwinRazor;
 using Microsoft.Owin.Hosting;
 
 namespace TwitterProxy
@@ -15,6 +17,7 @@ namespace TwitterProxy
             ServicePointManager.Expect100Continue = false;
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             ServicePointManager.ServerCertificateValidationCallback = (_, __, ___, ____) => true;
+            AppTemplateManager.TemplateDirectory = Path.Combine("WebServer", "Views");
 
             using (WebApp.Start<WebServer.Startup>(new StartOptions(uri)))
             {
