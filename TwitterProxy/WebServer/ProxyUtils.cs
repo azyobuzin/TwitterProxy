@@ -13,18 +13,45 @@ namespace TwitterProxy.WebServer
     {
         public static Task<HttpResponseMessage> DoRequest(IOwinRequest request, string uri, Stream body = null)
         {
-            var uriBuilder = new UriBuilder(uri) { Query = request.QueryString.Value };
-            Debug.WriteLine("Requesting: " + uriBuilder.ToString());
-            var msg = new HttpRequestMessage(new HttpMethod(request.Method), uriBuilder.Uri);
+            var requestUri = new UriBuilder(uri) { Query = request.QueryString.Value }.Uri;
+            Debug.WriteLine("Requesting: " + requestUri.AbsoluteUri);
+
+            var msg = new HttpRequestMessage(new HttpMethod(request.Method), requestUri);
+
+            if (!request.IsGet() && !request.IsHead())
+                msg.Content = new StreamContent(body ?? request.Body);
+
             foreach (var kvp in request.Headers)
             {
-                if (!kvp.Key.Equals("Host", StringComparison.OrdinalIgnoreCase))
-                    msg.Headers.TryAddWithoutValidation(kvp.Key, kvp.Value);
+                if (kvp.Key.EqualsIgnoreCase("Host")) continue;
+
+                try
+                {
+                    msg.Headers.Remove(kvp.Key);
+                    msg.Headers.Add(kvp.Key, kvp.Value);
+                    continue;
+                }
+                catch { }
+
+                if (msg.Content != null)
+                {
+                    try
+                    {
+                        msg.Content.Headers.Remove(kvp.Key);
+                        msg.Content.Headers.Add(kvp.Key, kvp.Value);
+                        continue;
+                    }
+                    catch { }
+                }
+
+                Trace.TraceInformation("Could not add to header: {0}: {1}", kvp.Key, kvp.Value);
             }
-            if (!request.IsGet() && !request.IsHead())
+
+            if (request.QueryString.HasValue && requestUri.Query.TrimStart('?') != request.QueryString.Value)
             {
-                msg.Content = new StreamContent(body ?? request.Body);
+                //TODO: re-create authorization header
             }
+
             var client = new HttpClient(new HttpClientHandler()
             {
                 AllowAutoRedirect = false,
@@ -41,7 +68,7 @@ namespace TwitterProxy.WebServer
             foreach (var kvp in msg.Headers)
             {
                 var value = kvp.Value.ToArray();
-                if (value.Length > 0 && kvp.Key.ToLowerInvariant() != "strict-transport-security")
+                if (value.Length > 0 && !kvp.Key.EqualsIgnoreCase("strict-transport-security"))
                     response.Headers.Add(kvp.Key, value);
             }
             foreach (var kvp in msg.Content.Headers)

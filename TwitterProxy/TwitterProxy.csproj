@@ -56,6 +56,10 @@
       <HintPath>..\packages\Microsoft.Owin.Hosting.3.0.1\lib\net45\Microsoft.Owin.Hosting.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.3.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="MsgPack, Version=0.5.0.0, Culture=neutral, PublicKeyToken=a2625990d5dc0167, processorArchitecture=MSIL">
       <HintPath>..\packages\MsgPack.Cli.0.5.11\lib\net45\MsgPack.dll</HintPath>
       <Private>True</Private>
@@ -85,24 +89,30 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Database.cs" />
+    <Compile Include="EnvironmentVariables.cs" />
+    <Compile Include="OAuth.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TwitterOAuthHttpMessageHandler.cs" />
     <Compile Include="WebServer\Extensions.cs" />
     <Compile Include="WebServer\Middlewares\AccessTokenMiddleware.cs" />
+    <Compile Include="WebServer\Middlewares\MypageMiddleware.cs" />
     <Compile Include="WebServer\Middlewares\ProxyMiddleware.cs" />
     <Compile Include="WebServer\Middlewares\RedirectMiddleware.cs" />
     <Compile Include="WebServer\Models\AccessToken.cs" />
     <Compile Include="WebServer\Models\Consumer.cs" />
+    <Compile Include="WebServer\Models\MypageModel.cs" />
+    <Compile Include="WebServer\Models\ProxyUser.cs" />
     <Compile Include="WebServer\ProxyUtils.cs" />
     <Compile Include="WebServer\Startup.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="WebServer\Views\Mypage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Collector\" />
-    <Folder Include="WebServer\Views\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,0 +1,28 @@
+﻿@using TwitterProxy.WebServer.Models
+@inherits Azyobuzi.OwinRazor.AppTemplateBase<MypageModel>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>マイページ - twproxy.azyobuzi.net</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
+</head>
+<body>
+    <nav class="navbar navbar-default navbar-static-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="~/">TwitterProxy</a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="active"><a href="~/mypage">マイページ</a></li>
+                <li><a href="https://github.com/azyobuzin/TwitterProxy">GitHub</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>Hello, @Model.ScreenName</h1>
+    </div>
+</body>
+</html>

@@ -22,14 +22,19 @@ namespace TwitterProxy.WebServer
             return app.MapWhen(ctx => paths.Contains(ctx.Request.Path.Value, StringComparer.OrdinalIgnoreCase), a => a.Use<T>(args));
         }
 
+        public static bool EqualsIgnoreCase(this string x, string y)
+        {
+            return string.Equals(x, y, StringComparison.OrdinalIgnoreCase);
+        }
+
         public static bool IsGet(this IOwinRequest request)
         {
-            return string.Equals(request.Method, "GET", StringComparison.OrdinalIgnoreCase);
+            return request.Method.EqualsIgnoreCase("GET");
         }
 
         public static bool IsHead(this IOwinRequest request)
         {
-            return string.Equals(request.Method, "HEAD", StringComparison.OrdinalIgnoreCase);
+            return request.Method.EqualsIgnoreCase("HEAD");
         }
 
         public static Dictionary<string, string> ParseAuthorizationHeader(this IOwinRequest request)

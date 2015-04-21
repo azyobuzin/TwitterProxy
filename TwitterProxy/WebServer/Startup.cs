@@ -12,6 +12,7 @@ namespace TwitterProxy.WebServer
         public void Configuration(IAppBuilder app)
         {
             app.UseErrorPage(ErrorPageOptions.ShowAll)
+                .Use<MypageMiddleware>(app)
                 .Map("/twitter/api", ConfigureTwitterApi);
         }
 
