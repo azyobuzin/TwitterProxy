@@ -115,12 +115,12 @@ namespace TwitterProxy.WebServer.Middlewares
                 var userId = ulong.Parse(resDic["user_id"]);
                 using (var tran = Database.GetTransaction())
                 {
-                    tran.Insert("users", userId, new ProxyUser()
+                    tran.Insert(Database.Users, userId, new ProxyUser()
                     {
                         AccessToken = resDic["oauth_token"],
                         AccessTokenSecret = resDic["oauth_token_secret"]
                     });
-                    tran.Insert("screenNames", userId, resDic["screen_name"]);
+                    tran.Insert(Database.ScreenNames, userId, resDic["screen_name"]);
                     tran.Commit();
                 }
 
@@ -147,10 +147,10 @@ namespace TwitterProxy.WebServer.Middlewares
 
             using (var tran = Database.GetTransaction())
             {
-                model.ScreenName = tran.Select<ulong, string>("screenNames", userId.Value).Value;
+                model.ScreenName = tran.Select<ulong, string>(Database.ScreenNames, userId.Value).Value;
             }
 
-            context.Response.View("Mypage", model);
+            await context.Response.View("Mypage", model).ConfigureAwait(false);
         }
     }
 }

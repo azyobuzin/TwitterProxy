@@ -28,14 +28,14 @@ namespace TwitterProxy.WebServer.Middlewares
                         Debug.WriteLine("Got access_token: " + screenName);
                         using (var tran = Database.GetTransaction())
                         {
-                            tran.Insert("tokens", resDic["oauth_token"], new AccessToken()
+                            tran.Insert(Database.Tokens, resDic["oauth_token"], new AccessToken()
                             {
                                 ConsumerKey = oauthDic["oauth_consumer_key"],
                                 AccessTokenSecret = resDic["oauth_token_secret"],
                                 UserId = userId,
                                 CreatedAtUtc = DateTime.UtcNow
                             });
-                            tran.Insert("screenNames", userId, screenName);
+                            tran.Insert(Database.ScreenNames, userId, screenName);
                             tran.Commit();
                         }
                     }

@@ -29,5 +29,9 @@ namespace TwitterProxy
             if (engine.IsValueCreated)
                 engine.Value.Dispose();
         }
+
+        public const string ScreenNames = "screenNames";
+        public const string Tokens = "tokens";
+        public const string Users = "users";
     }
 }
