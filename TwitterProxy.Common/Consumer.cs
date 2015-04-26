@@ -1,8 +1,8 @@
 ﻿using MsgPack.Serialization;
 
-namespace TwitterProxy.WebServer.Models
+namespace TwitterProxy.Common
 {
-    class Consumer
+    public class Consumer
     {
         [MessagePackMember(0)]
         public string Key { get; set; }

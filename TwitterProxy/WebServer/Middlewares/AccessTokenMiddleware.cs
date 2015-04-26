@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.Owin;
 using Microsoft.Owin.Helpers;
+using TwitterProxy.Common;
 using TwitterProxy.WebServer.Models;
 
 namespace TwitterProxy.WebServer.Middlewares
@@ -28,7 +29,7 @@ namespace TwitterProxy.WebServer.Middlewares
                         Debug.WriteLine("Got access_token: " + screenName);
                         using (var tran = Database.GetTransaction())
                         {
-                            tran.Insert(Database.Tokens, resDic["oauth_token"], new AccessToken()
+                            tran.Insert(Database.Tokens, resDic["oauth_token"], new AccessTokenInfo()
                             {
                                 ConsumerKey = oauthDic["oauth_consumer_key"],
                                 AccessTokenSecret = resDic["oauth_token_secret"],
