@@ -40,12 +40,12 @@
       <HintPath>..\packages\DBreeze.1.71.0\lib\net45\DBreeze.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="LightNode.Core, Version=1.3.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\LightNode.Core.1.3.1\lib\LightNode.Core.dll</HintPath>
+    <Reference Include="LightNode.Core, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\LightNode.Core.1.4.0\lib\LightNode.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="LightNode.Formatter.MsgPack, Version=1.3.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\LightNode.Formatter.MsgPack.1.3.1\lib\LightNode.Formatter.MsgPack.dll</HintPath>
+    <Reference Include="LightNode.Formatter.MsgPack, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\LightNode.Formatter.MsgPack.1.4.0\lib\LightNode.Formatter.MsgPack.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
