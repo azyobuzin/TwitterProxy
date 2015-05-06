@@ -1,6 +1,6 @@
 ﻿using MsgPack.Serialization;
 
-namespace TwitterProxy.WebServer.Models
+namespace TwitterProxy.Common.Models
 {
     public class ProxyUser
     {
@@ -9,5 +9,8 @@ namespace TwitterProxy.WebServer.Models
 
         [MessagePackMember(1)]
         public string AccessTokenSecret { get; set; }
+
+        [MessagePackMember(2)]
+        public string ScreenName { get; set; }
     }
 }

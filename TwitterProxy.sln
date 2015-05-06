@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitterProxy", "TwitterProxy\TwitterProxy.csproj", "{2A41767D-76D0-4582-B419-C32ABEDB7298}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitterProxy.WebServer", "TwitterProxy.WebServer\TwitterProxy.WebServer.csproj", "{2A41767D-76D0-4582-B419-C32ABEDB7298}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitterProxy.Common", "TwitterProxy.Common\TwitterProxy.Common.csproj", "{900FFD39-E71C-49A2-BFDF-35426D88CD2A}"
 EndProject

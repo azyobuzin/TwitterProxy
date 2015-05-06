@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using LightNode.Server;
-using TwitterProxy.Common;
+using TwitterProxy.Common.Models;
 
 namespace TwitterProxy.CoreServer.Contracts
 {
     class Consumers : LightNodeContract
     {
-        public void Insert(ulong userId, string key, string secret, string name)
+        public Consumer Insert(ulong userId, string key, string secret, string name)
         {
+            Consumer value;
             using (var tran = Database.GetTransaction())
             {
                 tran.SynchronizeTables(Database.Consumers);
@@ -17,20 +18,23 @@ namespace TwitterProxy.CoreServer.Contracts
                 var index = userConsumers.FindIndex(x => x.Key == key && x.Secret == secret);
                 if (index >= 0)
                 {
-                    userConsumers[index].Name = name;
+                    value = userConsumers[index];
+                    value.Name = name;
                 }
                 else
                 {
-                    userConsumers.Add(new Consumer()
+                    value = new Consumer()
                     {
                         Key = key,
                         Secret = secret,
                         Name = name
-                    });
+                    };
+                    userConsumers.Add(value);
                 }
                 tran.Insert(Database.Consumers, userId, userConsumers);
                 tran.Commit();
             }
+            return value;
         }
 
         public IList<Consumer> GetAllOfUser(ulong userId)

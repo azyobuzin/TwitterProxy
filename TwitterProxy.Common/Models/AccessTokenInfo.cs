@@ -1,7 +1,7 @@
 ﻿using System;
 using MsgPack.Serialization;
 
-namespace TwitterProxy.Common
+namespace TwitterProxy.Common.Models
 {
     public class AccessTokenInfo
     {
@@ -9,15 +9,12 @@ namespace TwitterProxy.Common
         public string ConsumerKey { get; set; }
 
         [MessagePackMember(1)]
-        public string ConsumerSecret { get; set; }
-
-        [MessagePackMember(2)]
         public string AccessTokenSecret { get; set; }
 
-        [MessagePackMember(3)]
+        [MessagePackMember(2)]
         public ulong UserId { get; set; }
 
-        [MessagePackMember(4)]
+        [MessagePackMember(3)]
         public DateTime CreatedAtUtc { get; set; }
     }
 }

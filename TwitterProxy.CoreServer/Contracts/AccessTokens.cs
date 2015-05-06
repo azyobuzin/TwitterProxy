@@ -2,25 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using LightNode.Server;
-using TwitterProxy.Common;
+using TwitterProxy.Common.Models;
 
 namespace TwitterProxy.CoreServer.Contracts
 {
     class AccessTokens : LightNodeContract
     {
-        public AccessTokenInfo Insert(string accessToken, string accessTokenSecret, ulong userId, string consumerKey, string consumerSecret = null)
+        public AccessTokenInfo Insert(string consumerKey, string accessToken, string accessTokenSecret, ulong userId)
         {
-            if (string.IsNullOrEmpty(consumerSecret))
-            {
-                consumerSecret = new Consumers().GetSecret(userId, consumerKey);
-                if (string.IsNullOrEmpty(consumerSecret))
-                    return null;
-            }
-
             var value = new AccessTokenInfo()
             {
                 ConsumerKey = consumerKey,
-                ConsumerSecret = consumerSecret,
                 AccessTokenSecret = accessTokenSecret,
                 UserId = userId,
                 CreatedAtUtc = DateTime.UtcNow
@@ -61,7 +53,7 @@ namespace TwitterProxy.CoreServer.Contracts
                         return new AccessTokenViewModel()
                         {
                             Consumer = consumers.FirstOrDefault(c => c.Key == value.ConsumerKey)
-                                ?? new Consumer() { Key = value.ConsumerKey, Secret = value.ConsumerSecret },
+                                ?? new Consumer() { Key = value.ConsumerKey },
                             AccessToken = row.Key,
                             CreatedAtUtc = value.CreatedAtUtc
                         };

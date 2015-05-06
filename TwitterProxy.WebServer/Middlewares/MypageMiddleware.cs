@@ -1,18 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Owin;
 using Azyobuzi.OwinRazor;
-using TwitterProxy.WebServer.Models;
-using Microsoft.Owin.Security;
+using Microsoft.Owin;
+using Microsoft.Owin.Helpers;
 using Microsoft.Owin.Security.DataProtection;
 using Owin;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using Microsoft.Owin.Infrastructure;
-using Microsoft.Owin.Helpers;
+using TwitterProxy.Common;
+using TwitterProxy.WebServer.Models;
 
 namespace TwitterProxy.WebServer.Middlewares
 {
@@ -113,16 +110,7 @@ namespace TwitterProxy.WebServer.Middlewares
                 }
 
                 var userId = ulong.Parse(resDic["user_id"]);
-                using (var tran = Database.GetTransaction())
-                {
-                    tran.Insert(Database.Users, userId, new ProxyUser()
-                    {
-                        AccessToken = resDic["oauth_token"],
-                        AccessTokenSecret = resDic["oauth_token_secret"]
-                    });
-                    tran.Insert(Database.ScreenNames, userId, resDic["screen_name"]);
-                    tran.Commit();
-                }
+                await CoreServer.Client.ProxyUsers.Insert(userId, resDic["oauth_token"], resDic["oauth_token_secret"]).ConfigureAwait(false);
 
                 res.Cookies.Append(
                     SessionCookie,
@@ -140,17 +128,26 @@ namespace TwitterProxy.WebServer.Middlewares
 
         private async Task Index(IOwinContext context)
         {
-            var userId = await Authorize(context).ConfigureAwait(false);
+            var res = context.Response;
+
+            var userId = await this.Authorize(context).ConfigureAwait(false);
             if (!userId.HasValue) return;
 
             var model = new MypageModel();
 
-            using (var tran = Database.GetTransaction())
+            try
             {
-                model.ScreenName = tran.Select<ulong, string>(Database.ScreenNames, userId.Value).Value;
+                model.ScreenName = await CoreServer.Client.TwitterUsers.GetScreenName(userId.Value).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                Trace.TraceWarning(ex.ToString());
+                res.Cookies.Delete(SessionCookie);
+                this.Authorize(context).Wait();
+                return;
             }
 
-            await context.Response.View("Mypage", model).ConfigureAwait(false);
+            await res.View("Mypage", model).ConfigureAwait(false);
         }
     }
 }

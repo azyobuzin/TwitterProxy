@@ -1,6 +1,6 @@
 ﻿using MsgPack.Serialization;
 
-namespace TwitterProxy.Common
+namespace TwitterProxy.Common.Models
 {
     public class Consumer
     {

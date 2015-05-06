@@ -20,6 +20,8 @@ namespace TwitterProxy.Common
                     resetEvent.Set();
                 };
                 resetEvent.WaitOne();
+
+                Console.WriteLine("Terminating...");
             }
         }
     }

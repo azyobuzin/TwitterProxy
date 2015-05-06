@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DBreeze;
 using DBreeze.Transactions;
 using MsgPack.Serialization;
+using TwitterProxy.Common;
 
 namespace TwitterProxy.CoreServer
 {
@@ -19,7 +16,8 @@ namespace TwitterProxy.CoreServer
             DBreeze.Utils.CustomSerializator.ByteArrayDeSerializator =
                 (bytes, type) => MessagePackSerializer.Get(type).UnpackSingleObject(bytes);
 
-            return new DBreezeEngine("db");
+            var directory = EnvironmentVariables.DbDirectory;
+            return new DBreezeEngine(string.IsNullOrEmpty(directory) ? "db" : directory);
         });
 
         public static Transaction GetTransaction()
@@ -44,5 +42,23 @@ namespace TwitterProxy.CoreServer
         /// Value: AccessTokenInfo
         /// </summary>
         public const string AccessTokens = "accessTokens";
+
+        /// <summary>
+        /// Key: User ID (ulong)
+        /// Value: ProxyUser
+        /// </summary>
+        public const string ProxyUsers = "proxyUsers";
+
+        /// <summary>
+        /// Key: User ID (ulong)
+        /// Value: byte[] (BSON of a user)
+        /// </summary>
+        public const string TwitterUsers = "twitterUsers";
+
+        /// <summary>
+        /// Key: User ID (ulong)
+        /// Value: FriendsInfo
+        /// </summary>
+        public const string Friends = "friends";
     }
 }

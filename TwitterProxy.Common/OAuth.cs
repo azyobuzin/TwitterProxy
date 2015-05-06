@@ -4,9 +4,9 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace TwitterProxy
+namespace TwitterProxy.Common
 {
-    static class OAuth
+    public static class OAuth
     {
         private static string[] encodeMap = new[]
         {

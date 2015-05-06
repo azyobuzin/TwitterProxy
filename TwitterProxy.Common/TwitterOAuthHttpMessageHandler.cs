@@ -3,9 +3,9 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TwitterProxy
+namespace TwitterProxy.Common
 {
-    class TwitterOAuthHttpMessageHandler : DelegatingHandler
+    public class TwitterOAuthHttpMessageHandler : DelegatingHandler
     {
         public TwitterOAuthHttpMessageHandler(HttpMessageHandler innerHandler) : base(innerHandler) { }
         public TwitterOAuthHttpMessageHandler() : this(new HttpClientHandler()) { }

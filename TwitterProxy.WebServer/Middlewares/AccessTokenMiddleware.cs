@@ -24,21 +24,13 @@ namespace TwitterProxy.WebServer.Middlewares
                     {
                         await res.Content.LoadIntoBufferAsync().ConfigureAwait(false);
                         var resDic = WebHelpers.ParseForm(await res.Content.ReadAsStringAsync2().ConfigureAwait(false));
-                        var userId = ulong.Parse(resDic["user_id"]);
-                        var screenName = resDic["screen_name"];
-                        Debug.WriteLine("Got access_token: " + screenName);
-                        using (var tran = Database.GetTransaction())
-                        {
-                            tran.Insert(Database.Tokens, resDic["oauth_token"], new AccessTokenInfo()
-                            {
-                                ConsumerKey = oauthDic["oauth_consumer_key"],
-                                AccessTokenSecret = resDic["oauth_token_secret"],
-                                UserId = userId,
-                                CreatedAtUtc = DateTime.UtcNow
-                            });
-                            tran.Insert(Database.ScreenNames, userId, screenName);
-                            tran.Commit();
-                        }
+                        Debug.WriteLine("Got access_token: " + resDic["screen_name"]);
+                        await CoreServer.Client.AccessTokens.Insert(
+                            oauthDic["oauth_consumer_key"],
+                            resDic["oauth_token"],
+                            resDic["oauth_token_secret"],
+                            ulong.Parse(resDic["user_id"])
+                        ).ConfigureAwait(false);
                     }
                 }
 
