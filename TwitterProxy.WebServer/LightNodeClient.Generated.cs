@@ -146,6 +146,16 @@ namespace LightNode.Client
             return PostAsync<System.String>("/Consumers/GetSecret", new FormUrlEncodedContent(list), cancellationToken);
         }
 
+        System.Threading.Tasks.Task<System.Boolean> _IConsumers.Delete(System.UInt64 userId, System.String key, System.String secret, System.Threading.CancellationToken cancellationToken)
+        {
+            var list = new List<KeyValuePair<string, string>>(3);
+            list.Add(new KeyValuePair<string, string>("userId", userId.ToString()));
+            if (key != null) list.Add(new KeyValuePair<string, string>("key", key));
+            if (secret != null) list.Add(new KeyValuePair<string, string>("secret", secret));
+
+            return PostAsync<System.Boolean>("/Consumers/Delete", new FormUrlEncodedContent(list), cancellationToken);
+        }
+
         #endregion
 
         #region _IProxyUsers
@@ -196,6 +206,7 @@ namespace LightNode.Client
         System.Threading.Tasks.Task<TwitterProxy.Common.Models.Consumer> Insert(System.UInt64 userId, System.String key, System.String secret, System.String name, System.Threading.CancellationToken cancellationToken = default(CancellationToken));
         System.Threading.Tasks.Task<System.Collections.Generic.IList<TwitterProxy.Common.Models.Consumer>> GetAllOfUser(System.UInt64 userId, System.Threading.CancellationToken cancellationToken = default(CancellationToken));
         System.Threading.Tasks.Task<System.String> GetSecret(System.UInt64 userId, System.String key, System.Threading.CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<System.Boolean> Delete(System.UInt64 userId, System.String key, System.String secret, System.Threading.CancellationToken cancellationToken = default(CancellationToken));
     }
 
     public interface _IProxyUsers

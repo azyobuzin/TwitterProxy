@@ -55,5 +55,26 @@ namespace TwitterProxy.CoreServer.Contracts
                 return row.Value.Where(x => x.Key == key).Select(x => x.Secret).FirstOrDefault();
             }
         }
+
+        public bool Delete(ulong userId, string key, string secret)
+        {
+            using (var tran = Database.GetTransaction())
+            {
+                tran.SynchronizeTables(Database.Consumers);
+                var row = tran.Select<ulong, List<Consumer>>(Database.Consumers, userId);
+                if (!row.Exists) return false;
+                var userConsumers = row.Value;
+                if (userConsumers.RemoveAll(x => x.Key == key && x.Secret == secret) > 0)
+                {
+                    tran.Insert(Database.Consumers, userId, userConsumers);
+                    tran.Commit();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
     }
 }

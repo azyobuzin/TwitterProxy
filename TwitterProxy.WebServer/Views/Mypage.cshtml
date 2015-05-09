@@ -1,5 +1,5 @@
 ﻿@using TwitterProxy.WebServer.Models
-@inherits Azyobuzi.OwinRazor.AppTemplateBase<MypageModel>
+@inherits Azyobuzi.OwinRazor.TemplateBase<MypageModel>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -22,7 +22,59 @@
     </nav>
 
     <div class="container">
-        <h1>Hello, @Model.ScreenName</h1>
+        <h1>@@@Model.ScreenName</h1>
+
+        <section>
+            <h2>API キー設定</h2>
+            <p>プロキシを使用する前に使用する API キーを登録しておく必要があります。</p>
+            <ul class="list-group">
+                @for (var i = 0; i < Model.Consumers.Count; i++)
+                {
+                    var consumer = Model.Consumers[i];
+                    var id = "consumer" + i;
+                    <li class="list-group-item">
+                        <a data-toggle="collapse" href="#@id">
+                            @(string.IsNullOrEmpty(consumer.Name) ? consumer.Key : consumer.Name)
+                        </a>
+                        <div id="@id" class="collapse">
+                            <table class="table">
+                                <tr>
+                                    <th>API キー</th>
+                                    <td>@consumer.Key</td>
+                                </tr>
+                                <tr>
+                                    <th>API シークレット</th>
+                                    <td>@consumer.Secret</td>
+                                </tr>
+                            </table>
+                            <form action="mypage/delete_consumer" method="post">
+                                <input type="hidden" name="key" value="@consumer.Key" />
+                                <input type="hidden" name="secret" value="@consumer.Secret" />
+                                <button class="btn btn-danger" type="submit">削除</button>
+                            </form>
+                        </div>
+                    </li>                    
+                }
+            </ul>
+            <form action="mypage/add_consumer" method="post">
+                <div class="form-group">
+                    <label for="consumer-name">名前（任意）</label>
+                    <input type="text" class="form-control" id="consumer-name" name="name" />
+                </div>
+                <div class="form-group">
+                    <label for="consumer-key">API キー</label>
+                    <input type="text" class="form-control" id="consumer-key" name="key" required />
+                </div>
+                <div class="form-group">
+                    <label for="consumer-secret">API シークレット</label>
+                    <input type="text" class="form-control" id="consumer-secret" name="secret" required />
+                </div>
+                <button class="btn btn-primary" type="submit">登録</button>
+            </form>
+        </section>
     </div>
+
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 </body>
 </html>

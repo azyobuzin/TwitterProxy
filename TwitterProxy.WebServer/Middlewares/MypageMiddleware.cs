@@ -34,6 +34,10 @@ namespace TwitterProxy.WebServer.Middlewares
                     return this.Index(context);
                 case "/mypage/callback":
                     return this.Callback(context);
+                case "/mypage/add_consumer":
+                    return this.AddConsumer(context);
+                case "/mypage/delete_consumer":
+                    return this.DeleteConsumer(context);
             }
 
             return this.Next.Invoke(context);
@@ -76,6 +80,13 @@ namespace TwitterProxy.WebServer.Middlewares
             }
 
             return null;
+        }
+
+        private static void RedirectToIndex(IOwinContext context)
+        {
+            var res = context.Response;
+            res.StatusCode = 303;
+            res.Headers["Location"] = new Uri(GetBaseUri(context.Request), "mypage").AbsoluteUri;
         }
 
         private async Task Callback(IOwinContext context)
@@ -123,7 +134,7 @@ namespace TwitterProxy.WebServer.Middlewares
                 );
             }
 
-            res.Redirect(new Uri(GetBaseUri(req), "mypage").AbsoluteUri);
+            RedirectToIndex(context);
         }
 
         private async Task Index(IOwinContext context)
@@ -143,11 +154,49 @@ namespace TwitterProxy.WebServer.Middlewares
             {
                 Trace.TraceWarning(ex.ToString());
                 res.Cookies.Delete(SessionCookie);
-                this.Authorize(context).Wait();
+                RedirectToIndex(context);
                 return;
             }
 
-            await res.View("Mypage", model).ConfigureAwait(false);
+            model.Consumers = await CoreServer.Client.Consumers.GetAllOfUser(userId.Value).ConfigureAwait(false);
+            model.AccessTokens = await CoreServer.Client.AccessTokens.GetAllOfUser(userId.Value).ConfigureAwait(false);
+
+            await res.View(new Views.Mypage(), model).ConfigureAwait(false);
+        }
+
+        private async Task AddConsumer(IOwinContext context)
+        {
+            var userId = await this.Authorize(context).ConfigureAwait(false);
+            if (!userId.HasValue) return;
+
+            var form = await context.Request.ReadFormAsync().ConfigureAwait(false);
+            var name = form["name"];
+            var key = form["key"];
+            var secret = form["secret"];
+
+            if (!string.IsNullOrEmpty(key) && !string.IsNullOrEmpty(secret))
+            {
+                await CoreServer.Client.Consumers.Insert(userId.Value, key, secret, name).ConfigureAwait(false);
+            }
+
+            RedirectToIndex(context);
+        }
+
+        private async Task DeleteConsumer(IOwinContext context)
+        {
+            var userId = await this.Authorize(context).ConfigureAwait(false);
+            if (!userId.HasValue) return;
+
+            var form = await context.Request.ReadFormAsync().ConfigureAwait(false);
+            var key = form["key"];
+            var secret = form["secret"];
+
+            if (!string.IsNullOrEmpty(key) && !string.IsNullOrEmpty(secret))
+            {
+                await CoreServer.Client.Consumers.Delete(userId.Value, key, secret).ConfigureAwait(false);
+            }
+
+            RedirectToIndex(context);
         }
     }
 }

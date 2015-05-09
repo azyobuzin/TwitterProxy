@@ -13,7 +13,6 @@ namespace TwitterProxy.CoreServer
         {
             ServicePointManager.DefaultConnectionLimit = int.MaxValue;
             ServicePointManager.Expect100Continue = false;
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
             WebAppRunner.Run<Startup>(new StartOptions(args[0]));
 
